@@ -96,7 +96,7 @@ public class PropiedadController {
         }
     }
     
-    // ACTIVIDAD: Crea un metodo para Recuperar propiedades por tipo
+// ACTIVIDAD: Crea un metodo para Recuperar propiedades por tipo
     @GetMapping("/tipo/{tipo}")
     public List<PropiedadModel> getPropiedadesPorTipo(@PathVariable String tipo) {
         return propiedadService.getPropiedadesByTipo(tipo);

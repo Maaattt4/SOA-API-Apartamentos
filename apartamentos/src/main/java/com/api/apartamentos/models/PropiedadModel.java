@@ -13,10 +13,10 @@ public class PropiedadModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_propiedad")
     private Long idPropiedad;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_propietario", nullable = false)
     @JsonIgnoreProperties({"password", "hibernateLazyInitializer", "handler"})
-    private ClienteModel propietario;
+    private ClienteModel propietario;   
     @Column(name = "tipo_propiedad", nullable = false, length = 40)
     private String tipo;
     @Column(nullable = false, length = 100) private String titulo;

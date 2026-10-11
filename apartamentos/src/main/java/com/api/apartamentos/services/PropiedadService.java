@@ -2,9 +2,7 @@ package com.api.apartamentos.services;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.api.apartamentos.models.PropiedadModel;
 import com.api.apartamentos.repositories.IPropiedadRepository;
 
@@ -12,7 +10,7 @@ import com.api.apartamentos.repositories.IPropiedadRepository;
 public class PropiedadService extends BaseCrudService<PropiedadModel> {
 
     private final IPropiedadRepository propiedadRepository;
-    
+
     public PropiedadService(IPropiedadRepository propiedadRepository) {
         super(propiedadRepository);
         this.propiedadRepository = propiedadRepository;
@@ -29,7 +27,7 @@ public class PropiedadService extends BaseCrudService<PropiedadModel> {
     public PropiedadModel savePropiedad(PropiedadModel propiedad) {
         return save(propiedad);
     } 
-    
+
     public void deletePropiedad(Long id) {
         deleteById(id);
     }
@@ -39,6 +37,7 @@ public class PropiedadService extends BaseCrudService<PropiedadModel> {
         return propiedadRepository.findByTipo(tipo);
     }
 
+    // ACTIVIDAD: Crea un metodo para Recuoperar todas propiedades de un Propietario
     public List<PropiedadModel> getPropiedadesByPropietario(Long idPropietario) {
         return propiedadRepository.findByPropietario_Id(idPropietario);
     }
