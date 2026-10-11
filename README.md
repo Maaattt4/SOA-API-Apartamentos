@@ -2,21 +2,26 @@
 
 ## Descripción de la API
 
-El sistema está compuesto por una arquitectura basada en servicios REST diseñada para una empresa dedicada a la renta de habitaciones y casas. Su objetivo es gestionar eficientemente propiedades, clientes, reservaciones y pagos, dividiéndose en las siguientes APIs principales:
+El sistema está compuesto por una arquitectura basada en servicios REST diseñada para una empresa dedicada a la renta de habitaciones y casas[cite: 4]. Su objetivo es gestionar eficientemente propiedades, clientes, reservaciones y pagos[cite: 4], dividiéndose en las siguientes APIs principales:
 
 - **API de Clientes (`/api/clientes`):** Administra la información de los usuarios del sistema, diferenciando entre arrendatarios y propietarios. Permite su registro, actualización y baja.
 - **API de Propiedades (`/api/propiedades`):** Registra casas y pisos completos, gestionando sus características físicas (dirección, capacidad, precio) y vinculándolas a sus respectivos propietarios.
 - **API de Unidades Rentables (`/api/unidades`):** Gestiona los espacios individuales (habitaciones o pisos) que pertenecen a una propiedad general.
+- **API de Galería de Imágenes (`/api/propiedad-imagenes`):** Gestiona las URLs y descripciones de las fotografías asociadas a cada propiedad[cite: 32].
+- **API de Disponibilidad (`/api/disponibilidades`):** Administra bloqueos de fechas o precios especiales por temporada para las unidades rentables[cite: 31].
 - **API de Reservas (`/api/reservas`):** Gestiona la disponibilidad del sistema. Crea reservaciones vinculando a un cliente con una unidad en un rango de fechas específico, evitando solapamientos.
 - **API de Pagos (`/api/pagos`):** Da seguimiento a los estados de cuenta de cada reserva. Permite registrar pagos pendientes, confirmarlos, reembolsarlos y reportar morosidad.
+- **API de Reseñas (`/api/resenas`):** Recopila las calificaciones y comentarios de los clientes sobre sus estancias finalizadas[cite: 26].
+- **API de Notificaciones (`/api/notificaciones`):** Gestiona la mensajería interna y los avisos entre los usuarios del sistema (ej. propietario a cliente)[cite: 25].
+- **API de Reportes (`/api/reportes`):** Módulo analítico para la generación de reportes de ocupación, ingresos y deudores (morosidad)[cite: 5, 43].
 
 ## Tecnologías utilizadas
 
 - **Lenguaje:** Java
-- **Framework:** Spring Boot
+- **Framework:** Spring Boot[cite: 44]
 - **Persistencia de Datos:** Spring Data JPA / Hibernate
 - **Base de Datos:** MySQL
-- **Seguridad:** BCrypt (Para encriptación de contraseñas)
+- **Seguridad:** BCrypt (Para encriptación de contraseñas)[cite: 22]
 
 ## Pasos de instalación y ejecución local
 
@@ -25,7 +30,7 @@ El sistema está compuesto por una arquitectura basada en servicios REST diseña
 3. Clona este repositorio en tu máquina local usando `git clone https://github.com/Maaattt4/SOA-API-Apartamentos.git`.
 4. Importa el proyecto como un proyecto Maven en tu IDE.
 5. Modifica el archivo `src/main/resources/application.properties` con tus credenciales de MySQL (usuario y contraseña) y asegúrate de que el puerto coincida.
-6. Ejecuta la clase principal `ApartamentosApplication.java`. El servidor iniciará (por defecto en el puerto 1500) y creará las tablas automáticamente.
+6. Ejecuta la clase principal `ApartamentosApplication.java`[cite: 44]. El servidor iniciará (por defecto en el puerto 1500) y creará las tablas automáticamente.
 
 ## Variables de entorno necesarias
 
@@ -65,11 +70,32 @@ spring.jpa.show-sql=true
 **Unidades (`/api/unidades`)**
 
 * `GET /api/unidades`: Lista todas las unidades rentables.
+* `GET /api/unidades/{id}`: Obtiene una unidad específica.
+* `GET /api/unidades/propiedad/{idPropiedad}`: Lista unidades de una propiedad.
 * `POST /api/unidades`: Crea una nueva unidad vinculada a una propiedad.
+* `PUT /api/unidades/{id}`: Actualiza una unidad.
+* `DELETE /api/unidades/{id}`: Elimina una unidad.
+
+**Imágenes de Propiedades (`/api/propiedad-imagenes`)**
+
+* `GET /api/propiedad-imagenes`: Lista de imágenes registradas.
+* `GET /api/propiedad-imagenes/propiedad/{idPropiedad}`: Obtiene imágenes de un inmueble específico.
+* `POST /api/propiedad-imagenes`: Guarda una nueva imagen.
+* `PUT /api/propiedad-imagenes/{id}`: Actualiza los datos de una imagen.
+* `DELETE /api/propiedad-imagenes/{id}`: Elimina una imagen.
+
+**Disponibilidad (`/api/disponibilidades`)**
+
+* `GET /api/disponibilidades`: Consulta registros de disponibilidad/precios especiales.
+* `GET /api/disponibilidades/unidad/{idUnidad}`: Filtra disponibilidad por unidad rentable.
+* `POST /api/disponibilidades`: Registra un bloqueo de fechas o tarifa especial.
+* `PUT /api/disponibilidades/{id}`: Actualiza un registro de disponibilidad.
+* `DELETE /api/disponibilidades/{id}`: Elimina un registro.
 
 **Reservas (`/api/reservas`)**
 
 * `GET /api/reservas`: Lista todas las reservaciones.
+* `GET /api/reservas/{id}`: Obtiene una reserva específica.
 * `POST /api/reservas`: Registra una nueva reserva (valida disponibilidad).
 * `PUT /api/reservas/{id}`: Actualiza una reserva.
 * `DELETE /api/reservas/{id}`: Elimina o cancela una reserva.
@@ -77,9 +103,28 @@ spring.jpa.show-sql=true
 **Pagos (`/api/pagos`)**
 
 * `GET /api/pagos`: Lista todos los registros de pagos.
+* `GET /api/pagos/reserva/{idReserva}`: Lista los pagos de una reserva específica.
 * `POST /api/pagos`: Crea un nuevo pago asociado a una reserva.
+* `PUT /api/pagos/{id}`: Actualiza los datos de un pago.
 * `POST /api/pagos/{id}/confirmar`: Cambia el estado de un pago a PAGADO.
 * `POST /api/pagos/{id}/reembolsar`: Cambia el estado de un pago a REEMBOLSADO.
+* `DELETE /api/pagos/{id}`: Elimina un pago del registro.
+
+**Reseñas (`/api/resenas`)**
+
+* `GET /api/resenas`: Consulta la totalidad de reseñas.
+* `GET /api/resenas/reserva/{idReserva}`: Consulta la calificación asociada a una reserva.
+* `POST /api/resenas`: Publica una reseña sobre una reserva finalizada.
+* `PUT /api/resenas/{id}`: Actualiza una reseña existente.
+* `DELETE /api/resenas/{id}`: Elimina una reseña.
+
+**Notificaciones (`/api/notificaciones`)**
+
+* `GET /api/notificaciones`: Lista general de notificaciones.
+* `GET /api/notificaciones/destinatario/{idCliente}`: Obtiene notificaciones dirigidas a un cliente específico.
+* `POST /api/notificaciones`: Registra y envía un nuevo mensaje o notificación.
+* `PUT /api/notificaciones/{id}`: Actualiza el estado de una notificación (ej. a LEÍDA).
+* `DELETE /api/notificaciones/{id}`: Elimina una notificación.
 
 **Reportes (`/api/reportes`)**
 
@@ -153,5 +198,9 @@ Cuerpo de la Petición (JSON):
   "fechaSalida": "2026-11-15T12:00:00",
   "importeTotal": 12500.00
 }
+
+```
+
+```
 
 ```
